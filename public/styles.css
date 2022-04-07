@@ -1,0 +1,23 @@
+td,th{
+    padding: auto;
+}
+
+input{
+    border: 2px solid rgb(35, 186, 206);
+}
+
+.container{
+    position: relative;
+    border: 1px solid rgb(187, 72, 72);
+    width: 500px;
+    padding: 10px;
+    background-color: blanchedalmond;
+    left: 35%;
+    outline-style: dotted;
+    
+}
+
+button{
+    margin:10px;
+}
+
