@@ -1,258 +1,274 @@
-import React, { useState } from 'react'
-import SignInOption from './SignInOption'
+import React, { useEffect, useState } from "react";
 
 export default function UserAuthentication() {
-    let data = {username:"",password:"",city:"",WebServer:"",role:"",signOn:[]}
+  function SignOn() {
+    return (
+      <tr>
+        <td>Single Sign-on to the following:</td>
+        <td>
+          <input
+            type="checkbox"
+            name="mail"
+            onClick={handleClick}
+            defaultValue="Mail"
+          />
+          <label htmlFor="mail">Mail</label>
+          <br />
+          <input
+            type="checkbox"
+            name="payroll"
+            onClick={handleClick}
+            defaultValue="Payroll"
+          />
+          <label htmlFor="payroll">Payroll</label>
+          <br />
+          <input
+            type="checkbox"
+            name="selfService"
+            onClick={handleClick}
+            defaultValue="selfService"
+          />
+          <label htmlFor="selfService">selfService</label>
+        </td>
+      </tr>
+    );
+  }
+  function Role() {
+    return (
+      <tr>
+        <td>Please Specify your role:</td>
+        <td onChange={handleRole}>
+          <input type="radio" value="Admin" id="admin" name="role" />
+          <label htmlFor="admin">Admin</label>
+          <br />
+          <input type="radio" value="Engineer" id="engineer" name="role" />
+          <label htmlFor="engineer">Engineer</label>
+          <br />
+          <input type="radio" value="Manager" id="manager" name="role" />
+          <label htmlFor="manager">Manager</label>
+          <br />
+          <input type="radio" value="Guest" id="guest" name="role" />
+          <label htmlFor="guest">Guest</label>
+        </td>
+      </tr>
+    );
+  }
 
+  function WebServer() {
+    return (
+      <tr>
+        <td>
+          <label htmlFor="server">Web Server:</label>
+        </td>
+        <td>
+          <select name="server" id="server" onChange={handleSelect}>
+            <option>{server ? server : "---Choose a Server---"}</option>
+            <option value="Google Cloud">Google Cloud</option>
+            <option value="Amazon Web Services">Amazon Web Services</option>
+            <option value="Microsoft Azure">Microsoft Azure</option>
+          </select>
+        </td>
+      </tr>
+    );
+  }
 
+  const [details, setDetails] = useState(localStorage.getItem("details"));
+  const [user, setUser] = useState({
+    username: "",
+    password: "",
+    city: "",
+  });
 
+  const [error, setError] = useState({
+    userError: false,
+    passError: false,
+  });
+  const [checked, setChecked] = useState({
+    mail: false,
+    payroll: false,
+    selfService: false,
+  });
 
-    function SignOn()
-    {
-        return(<tr>
-                <td>Single Sign-on to the following:</td>
-                <td>
-                    
-                    <input type="checkbox" name="signON" value="Mail"  />
-                    <label for="mail">Mail</label>
-                    <br/>
-                    <input type="checkbox" name="signON" value="Payroll" />
-                    <label for="payroll">Payroll</label>
-                    <br/>
-                    <input type="checkbox"  name="signON" name="selfService" />
-                    <label for="selfService">selfService</label>
-                </td>
-            </tr>)
-    }
-    function Role()
-    {
-        return(<tr>
-            <td>Please Specify your role:</td>
-            <td onChange={handleRole}>
-                <input type="radio" value="Admin" id="admin" name="role"/>
-                <label for="admin">Admin</label>
-                <br/>
-                <input type="radio" value="Engineer" id="engineer" name="role"/>
-                <label for="engineer">Engineer</label>
-                <br/>
-                <input type="radio" value="Manager" id="manager" name="role"/>
-                <label for="manager">Manager</label>
-                <br/>
-                <input type="radio" value="Guest" id="guest" name="role"/>
-                <label for="guest">Guest</label>
-            </td>
-        </tr>)
-    }
+  const [role, setRole] = useState("");
 
-    function WebServer()
-    {
-        return(
-            <tr>
-                <td><label for="server">Web Server:</label></td>
-                <td><select name="server" id="server" onChange={handleSelect}>
-                    <option selected>{server?server:"---Choose a Server---"}</option>
-                    <option value="Google Cloud">Google Cloud</option>
-                    <option value="Amazon Web Services">Amazon Web Services</option>
-                    <option value="Microsoft Azure">Microsoft Azure</option>
-                    </select>
-                </td>
-            </tr>
-        )
-    }
+  const [server, setServer] = useState("");
 
-    const [user,setUser] = useState({
-        username:"",
-        password:"",
-        city:"",
-    })
+  const [signOn, setSignOn] = useState([]);
 
+  function handleRole(e) {
+    e.preventDefault();
+    setRole(e.target.value);
+  }
+  function handleSelect(e) {
+    setServer(e.target.value);
+  }
 
-    const [error,setError] =useState({
-        userError:false,
-        passError:false
-    })
+  function handleClick(e) {
+    const name = e.target.name;
+    setChecked((x) => {
+      if (name === "mail")
+        return {
+          mail: !x.mail,
+          payroll: x.payroll,
+          selfService: x.selfService,
+        };
+      else if (name === "payroll") {
+        return {
+          mail: x.mail,
+          payroll: !x.true,
+          selfService: x.selfService,
+        };
+      } else
+        return {
+          mail: x.mail,
+          payroll: x.payroll,
+          selfService: !x.selfService,
+        };
+    });
 
-    const [role,setRole] = useState("")
-
-
-    const [server,setServer] = useState("")
-
-    const [signOn,setSignOn] = useState([])
-
-
-     
-
-    
-
-
-    function handleRole(e)
-    {
-        e.preventDefault()
-        setRole(e.target.value)
-    }
-    console.log(role)
-    function handleSelect(e)
-    {
-        setServer(e.target.value)
-        
-    }
- 
-    function handleClick(e)
-    {
-        const checked = e.target.checked
-        console.log(checked)
-        if(checked)
-        {
-            const value = e.target.value
-            setSignOn(preValue=>{
-                return[...preValue,value]
-            })
-        }
-        
-        
-    }
-    
-
-
-
-    function handleUser(e)
-    {
-        const {name,value} = e.target;
-
-        setUser(preValue=>{
-            if(name==="username")
-            {
-                return{
-                    username:value,
-                    password:preValue.password,
-                    city:preValue.city
-                }
-            }
-            else if(name==="userpass")
-            {
-                return{
-                    username:preValue.username,
-                    password:value,
-                    city:preValue.city
-                }
-            }
-            else{
-                    return{nusername:preValue.username,
-                    password:preValue.password,
-                    city:value
-                    }
-            }
-        })
+    let x = [];
+    for (let i in checked) {
+      if (checked[i] === true) {
+        x.push(i);
+      }
     }
 
-   
+    setSignOn(x);
+  }
 
-   function handleSubmit(e)
-    {
-        
-        e.preventDefault()
-        if(user.username==="")
-        {
-            setError(preValue=>{
-                return{
-                    userError:true,
-                    passError:preValue.passError
-                }
-            })
-        }
+  function handleUser(e) {
+    const { name, value } = e.target;
 
-        else
-        {
-            setError(preValue=>{
-                return{
-                    userError:false,
-                    passError:preValue.passError
-                }
-            })
-        }
+    setUser((preValue) => {
+      if (name === "username") {
+        return {
+          username: value,
+          password: preValue.password,
+          city: preValue.city,
+        };
+      } else if (name === "userpass") {
+        return {
+          username: preValue.username,
+          password: value,
+          city: preValue.city,
+        };
+      } else {
+        return {
+          nusername: preValue.username,
+          password: preValue.password,
+          city: value,
+        };
+      }
+    });
+  }
 
-        if(!(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8}/).test(user.password))
-        {
-            setError(preValue=>{
-                return{
-                    userError:preValue.userError,
-                    passError:true
-                }
-            })
-        }
-        else{
-            setError(preValue=>{
-                return{
-                    userError:preValue.userError,
-                    passError:false
-                }
-            })
-        }
-
-
-
+  function handleValidate(e) {
+    e.preventDefault();
+    if (user.username === "") {
+      setError((preValue) => {
+        return {
+          userError: true,
+          passError: preValue.passError,
+        };
+      });
+    } else {
+      setError((preValue) => {
+        return {
+          userError: false,
+          passError: preValue.passError,
+        };
+      });
     }
 
-function handleSave(){
-    
-}
-
-
-    function handleReset()
-    {
-        setError({
-            userError:false,
-            passError:false
-        })
+    if (!/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8}/.test(user.password)) {
+      setError((preValue) => {
+        return {
+          userError: preValue.userError,
+          passError: true,
+        };
+      });
+    } else {
+      setError((preValue) => {
+        return {
+          userError: preValue.userError,
+          passError: false,
+        };
+      });
     }
-    data.username=user.username
-        data.password=user.password
-        data.city=user.city
-        data.WebServer=server
-        data.role=role
-        data.signOn=signOn
+  }
+  // console.log(checked)
 
+  function handleSave(e) {
+    e.preventDefault();
+    const userDetail = {
+      id: new Date().getTime().toString(),
+      Username: user.username,
+      Password: user.password,
+      City: user.city,
+      webServer: server,
+      Role: role,
+      SignOn: signOn,
+    };
+    setDetails(userDetail);
+  }
+
+  function handleReset() {
+    setError({
+      userError: false,
+      passError: false,
+    });
+  }
+  useEffect(() => {
+    localStorage.setItem("details", JSON.stringify(details));
+  }, [details]);
 
   return (
     <div>
-        <form onSubmit={handleSubmit} onReset={handleReset}>
+      <form>
         <table>
-            <tr>
-                <td><label for="username">Username:</label></td>
-                <td><input type="text"  name="username" onChange={handleUser}/></td>
-                <td>{error.userError?"Username can't be empty":""}</td>
-            </tr>
-            <tr>
-                <td><label for="userpassword">Password:</label></td>
-                <td><input type="password" onChange={handleUser}  name="userpass" /></td>
-                <td>{error.passError?"Password must be required and must have 8 characters and at least 1 digit and atleast 1 upper or lower case.":""}</td>
-            </tr>
-            <tr>
-                <td><label for="city">City of Employement:</label></td>
-                <td><input type="text" id="city" onChange={handleUser} name="city"/></td>
-            </tr>
-            <WebServer/>
-            <Role/>
-            <SignOn/>
-            
-            
+          <tr>
+            <td>
+              <label htmlFor="username">Username:</label>
+            </td>
+            <td>
+              <input type="text" name="username" onChange={handleUser} />
+            </td>
+            <td>{error.userError ? "Username can't be empty" : ""}</td>
+          </tr>
+          <tr>
+            <td>
+              <label htmlFor="userpassword">Password:</label>
+            </td>
+            <td>
+              <input type="password" onChange={handleUser} name="userpass" />
+            </td>
+            <td>
+              {error.passError
+                ? "Password must be required and must have 8 characters and at least 1 digit and atleast 1 upper or lower case."
+                : ""}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label htmlFor="city">City of Employement:</label>
+            </td>
+            <td>
+              <input type="text" id="city" onChange={handleUser} name="city" />
+            </td>
+          </tr>
+          <WebServer />
+          <Role />
+          <SignOn />
         </table>
-    <div>
-        <button type="submit">Validate</button>
-        <button  onClick={handleSave}>Save</button>
-        <button type="reset">Reset</button>
-    
+        <div>
+          <button onClick={handleValidate}>Validate</button>
+          <button onClick={handleSave}>Save</button>
+          <button type="reset" onClick={handleReset}>
+            Reset
+          </button>
+        </div>
+      </form>
+      <div></div>
     </div>
-
-    
-
-
-
-
-    </form>
-    <div>
-        {data.username}
-    </div>
-    </div>
-  )
+  );
 }
